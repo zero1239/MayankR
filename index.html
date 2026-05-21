@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayank Rawat — WordPress Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#ffffff;
+  --bg2:#f7f6ff;
+  --bg3:#f0eeff;
+  --text:#0a0a0f;
+  --muted:#6b6880;
+  --subtle:#c4bfd8;
+  --border:#e8e5f5;
+  --card:#ffffff;
+  --p1:#7c3aed;
+  --p2:#a855f7;
+  --p3:#c084fc;
+  --c1:#f97316;
+  --c2:#fb923c;
+  --g1:#10b981;
+  --g2:#34d399;
+  --b1:#3b82f6;
+  --b2:#60a5fa;
+  --pk1:#ec4899;
+  --pk2:#f472b6;
+  --nav-bg:rgba(255,255,255,0.88);
+  --pill-bg:#f3f0ff;
+  --pill-text:#7c3aed;
+}
+
+body.dark{
+  --bg:#08070f;
+  --bg2:#0f0d1a;
+  --bg3:#140f22;
+  --text:#f0ecff;
+  --muted:#9d97b8;
+  --subtle:#3d3660;
+  --border:#1e1a30;
+  --card:#100e1c;
+  --nav-bg:rgba(8,7,15,0.9);
+  --pill-bg:#1e1535;
+  --pill-text:#c084fc;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+  transition:background 0.4s,color 0.4s;
+}
+
+/* NOISE TEXTURE OVERLAY */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:1rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:all 0.3s;
+}
+
+.nav-logo{
+  font-family:'Outfit',sans-serif;
+  font-weight:800;font-size:1.1rem;
+  background:linear-gradient(135deg,var(--p1),var(--pk1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-decoration:none;
+}
+
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:0.8rem;letter-spacing:0.05em;font-weight:500;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--text)}
+
+.theme-pill{
+  display:flex;align-items:center;
+  background:var(--pill-bg);
+  border:1px solid var(--border);
+  border-radius:2rem;padding:3px;gap:2px;
+}
+.t-btn{
+  padding:0.3rem 0.9rem;border-radius:2rem;border:none;
+  background:transparent;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--muted);transition:all 0.2s;font-weight:500;
+}
+.t-btn.on{
+  background:linear-gradient(135deg,var(--p1),var(--pk1));
+  color:#fff;
+}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:9rem 2.5rem 5rem;
+  position:relative;overflow:hidden;
+}
+
+/* BIG BLOBS */
+.blob{
+  position:absolute;border-radius:50%;filter:blur(80px);
+  pointer-events:none;z-index:0;
+}
+.blob1{width:500px;height:500px;background:rgba(124,58,237,0.18);top:-100px;right:-100px}
+.blob2{width:400px;height:400px;background:rgba(236,72,153,0.14);bottom:-50px;left:-80px}
+.blob3{width:300px;height:300px;background:rgba(16,185,129,0.1);top:40%;left:50%}
+
+body.dark .blob1{background:rgba(124,58,237,0.25)}
+body.dark .blob2{background:rgba(236,72,153,0.2)}
+body.dark .blob3{background:rgba(16,185,129,0.15)}
+
+.hero-inner{position:relative;z-index:1;width:100%}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--pill-bg);border:1px solid var(--border);
+  border-radius:2rem;padding:0.45rem 1rem;margin-bottom:2rem;
+}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--g1);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.3)}}
+.badge-text{font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--pill-text);font-weight:600}
+
+.hero h1{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(3rem,7vw,6.5rem);
+  font-weight:900;
+  line-height:1.0;
+  letter-spacing:-0.03em;
+  margin-bottom:1.5rem;
+}
+
+.grad-text{
+  background:linear-gradient(135deg,var(--p1) 0%,var(--pk1) 50%,var(--c1) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-sub{
+  font-size:1.1rem;color:var(--muted);
+  max-width:520px;margin-bottom:3rem;
+  font-weight:300;line-height:1.85;
+}
+
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:4rem}
+
+.btn-grad{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--p1),var(--pk1));
+  color:#fff;
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:0.85rem;letter-spacing:0.04em;
+  padding:0.9rem 2rem;border-radius:0.6rem;
+  text-decoration:none;
+  transition:transform 0.2s,box-shadow 0.2s;
+  box-shadow:0 4px 20px rgba(124,58,237,0.3);
+}
+.btn-grad:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,0.4)}
+
+.btn-outline2{
+  display:inline-block;
+  border:1.5px solid var(--border);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;font-weight:600;
+  font-size:0.85rem;letter-spacing:0.04em;
+  padding:0.9rem 2rem;border-radius:0.6rem;
+  text-decoration:none;
+  transition:border-color 0.2s,background 0.2s;
+}
+.btn-outline2:hover{border-color:var(--p1);background:var(--pill-bg)}
+
+.hero-stats{
+  display:flex;gap:0;
+  border:1px solid var(--border);
+  border-radius:1rem;
+  overflow:hidden;
+  width:fit-content;
+  background:var(--card);
+}
+
+.hstat{
+  padding:1.25rem 2rem;
+  border-right:1px solid var(--border);
+  text-align:center;
+}
+.hstat:last-child{border-right:none}
+
+.hstat-num{
+  font-family:'Outfit',sans-serif;
+  font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--p1),var(--pk1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.hstat-label{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:0.35rem;font-weight:500}
+
+/* MARQUEE */
+.marquee-wrap{
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:0.9rem 0;
+  background:var(--bg2);
+}
+.marquee-track{
+  display:flex;gap:3rem;
+  animation:scroll 20s linear infinite;
+  width:max-content;
+}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;white-space:nowrap;
+}
+.marquee-dot{width:5px;height:5px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--pk1))}
+
+/* SECTIONS */
+section{padding:6rem 2.5rem;position:relative}
+
+.sec-eyebrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--pill-bg);border:1px solid var(--border);
+  border-radius:2rem;padding:0.35rem 0.9rem;margin-bottom:1.25rem;
+}
+.sec-eyebrow span{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--pill-text);font-weight:600}
+
+.sec-title{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:800;letter-spacing:-0.02em;
+  margin-bottom:3rem;line-height:1.1;
+}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:3.5rem;align-items:center}
+
+.about-copy p{color:var(--muted);font-size:1rem;margin-bottom:1.1rem;font-weight:400;line-height:1.85}
+.about-copy p strong{color:var(--text);font-weight:600}
+
+.about-cards{display:flex;flex-direction:column;gap:0.75rem}
+
+.acard{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.25rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:0.875rem;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.acard:hover{transform:translateX(4px)}
+.acard:nth-child(1):hover{border-color:var(--p1)}
+.acard:nth-child(2):hover{border-color:var(--b1)}
+.acard:nth-child(3):hover{border-color:var(--g1)}
+.acard:nth-child(4):hover{border-color:var(--c1)}
+
+.acard-icon{
+  width:38px;height:38px;border-radius:0.6rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.acard:nth-child(1) .acard-icon{background:rgba(124,58,237,0.12)}
+.acard:nth-child(2) .acard-icon{background:rgba(59,130,246,0.12)}
+.acard:nth-child(3) .acard-icon{background:rgba(16,185,129,0.12)}
+.acard:nth-child(4) .acard-icon{background:rgba(249,115,22,0.12)}
+
+.acard-info label{display:block;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.acard-info span{font-size:0.88rem;color:var(--text);font-weight:500}
+
+/* SKILLS */
+.skills-bento{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+}
+
+.skill-bento-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:1.25rem;
+  padding:1.5rem;
+  position:relative;overflow:hidden;
+  transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;
+}
+.skill-bento-card:hover{transform:translateY(-4px)}
+
+.skill-bento-card::before{
+  content:'';
+  position:absolute;inset:0;opacity:0;
+  transition:opacity 0.3s;
+  border-radius:1.25rem;
+}
+.skill-bento-card:hover::before{opacity:1}
+
+.sbc-p::before{background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(168,85,247,0.03))}
+.sbc-b::before{background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(96,165,250,0.03))}
+.sbc-g::before{background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(52,211,153,0.03))}
+.sbc-o::before{background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(251,146,60,0.03))}
+.sbc-pk::before{background:linear-gradient(135deg,rgba(236,72,153,0.06),rgba(244,114,182,0.03))}
+.sbc-t::before{background:linear-gradient(135deg,rgba(20,184,166,0.06),rgba(45,212,191,0.03))}
+
+.sbc-p:hover{border-color:rgba(124,58,237,0.4);box-shadow:0 8px 30px rgba(124,58,237,0.1)}
+.sbc-b:hover{border-color:rgba(59,130,246,0.4);box-shadow:0 8px 30px rgba(59,130,246,0.1)}
+.sbc-g:hover{border-color:rgba(16,185,129,0.4);box-shadow:0 8px 30px rgba(16,185,129,0.1)}
+.sbc-o:hover{border-color:rgba(249,115,22,0.4);box-shadow:0 8px 30px rgba(249,115,22,0.1)}
+.sbc-pk:hover{border-color:rgba(236,72,153,0.4);box-shadow:0 8px 30px rgba(236,72,153,0.1)}
+.sbc-t:hover{border-color:rgba(20,184,166,0.4);box-shadow:0 8px 30px rgba(20,184,166,0.1)}
+
+.sbc-emoji{
+  font-size:1.6rem;margin-bottom:0.85rem;
+  display:block;
+  position:relative;z-index:1;
+}
+.sbc-name{
+  font-family:'Outfit',sans-serif;
+  font-size:0.9rem;font-weight:700;
+  margin-bottom:0.75rem;position:relative;z-index:1;
+}
+.sbc-tags{display:flex;flex-wrap:wrap;gap:0.35rem;position:relative;z-index:1}
+
+.stag{
+  font-size:0.7rem;padding:0.22rem 0.65rem;
+  border-radius:2rem;font-weight:500;
+}
+.sbc-p .stag{background:rgba(124,58,237,0.1);color:var(--p1)}
+.sbc-b .stag{background:rgba(59,130,246,0.1);color:var(--b1)}
+.sbc-g .stag{background:rgba(16,185,129,0.1);color:var(--g1)}
+.sbc-o .stag{background:rgba(249,115,22,0.1);color:var(--c1)}
+.sbc-pk .stag{background:rgba(236,72,153,0.1);color:var(--pk1)}
+.sbc-t .stag{background:rgba(20,184,166,0.1);color:#0d9488}
+
+body.dark .sbc-p .stag{color:var(--p3)}
+body.dark .sbc-b .stag{color:var(--b2)}
+body.dark .sbc-g .stag{color:var(--g2)}
+body.dark .sbc-o .stag{color:var(--c2)}
+body.dark .sbc-pk .stag{color:var(--pk2)}
+body.dark .sbc-t .stag{color:#2dd4bf}
+
+/* PROJECTS */
+.projects-bento{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto auto;
+  gap:1rem;
+}
+
+.proj-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:1.25rem;
+  padding:1.75rem;
+  display:flex;flex-direction:column;
+  text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;
+  transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;
+}
+.proj-card:hover{transform:translateY(-5px)}
+
+.proj-card.featured{
+  grid-column:span 2;
+}
+
+.proj-card::after{
+  content:'↗';
+  position:absolute;top:1.5rem;right:1.5rem;
+  font-size:1rem;color:var(--subtle);
+  transition:color 0.2s,transform 0.2s;
+}
+.proj-card:hover::after{transform:translate(3px,-3px)}
+
+.pc-p{border-top:3px solid var(--p1)}.pc-p:hover{border-color:var(--p1);box-shadow:0 12px 40px rgba(124,58,237,0.15)}.pc-p:hover::after{color:var(--p1)}
+.pc-b{border-top:3px solid var(--b1)}.pc-b:hover{box-shadow:0 12px 40px rgba(59,130,246,0.15)}.pc-b:hover::after{color:var(--b1)}
+.pc-g{border-top:3px solid var(--g1)}.pc-g:hover{box-shadow:0 12px 40px rgba(16,185,129,0.15)}.pc-g:hover::after{color:var(--g1)}
+.pc-o{border-top:3px solid var(--c1)}.pc-o:hover{box-shadow:0 12px 40px rgba(249,115,22,0.15)}.pc-o:hover::after{color:var(--c1)}
+.pc-pk{border-top:3px solid var(--pk1)}.pc-pk:hover{box-shadow:0 12px 40px rgba(236,72,153,0.15)}.pc-pk:hover::after{color:var(--pk1)}
+.pc-t{border-top:3px solid #0d9488}.pc-t:hover{box-shadow:0 12px 40px rgba(13,148,136,0.15)}.pc-t:hover::after{color:#0d9488}
+.pc-y{border-top:3px solid #eab308}.pc-y:hover{box-shadow:0 12px 40px rgba(234,179,8,0.15)}.pc-y:hover::after{color:#eab308}
+
+.proj-sector{
+  font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;
+  font-weight:600;margin-bottom:0.75rem;
+}
+.pc-p .proj-sector{color:var(--p1)}
+.pc-b .proj-sector{color:var(--b1)}
+.pc-g .proj-sector{color:var(--g1)}
+.pc-o .proj-sector{color:var(--c1)}
+.pc-pk .proj-sector{color:var(--pk1)}
+.pc-t .proj-sector{color:#0d9488}
+.pc-y .proj-sector{color:#ca8a04}
+
+.proj-name{
+  font-family:'Outfit',sans-serif;
+  font-size:1.2rem;font-weight:800;
+  margin-bottom:0.5rem;letter-spacing:-0.01em;
+}
+.proj-desc{
+  font-size:0.83rem;color:var(--muted);
+  flex:1;line-height:1.65;font-weight:400;
+  margin-bottom:1rem;
+}
+.proj-url{
+  font-size:0.75rem;color:var(--subtle);
+  font-weight:500;letter-spacing:0.03em;
+}
+
+/* EXPERIENCE */
+.exp-wrap{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:1.5rem;
+  overflow:hidden;
+  width:100%;
+}
+
+.exp-top{
+  padding:2.5rem;
+  background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.04));
+  border-bottom:1px solid var(--border);
+}
+
+.exp-role-title{
+  font-family:'Outfit',sans-serif;
+  font-size:1.5rem;font-weight:800;
+  letter-spacing:-0.01em;margin-bottom:0.5rem;
+}
+
+.exp-meta-row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+
+.exp-chip{
+  display:inline-block;
+  font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
+  padding:0.35rem 0.85rem;border-radius:2rem;font-weight:600;
+}
+.exp-chip-co{background:rgba(124,58,237,0.12);color:var(--p1)}
+.exp-chip-yr{background:rgba(16,185,129,0.12);color:var(--g1)}
+.exp-chip-loc{background:rgba(59,130,246,0.1);color:var(--b1)}
+
+body.dark .exp-chip-co{color:var(--p3)}
+body.dark .exp-chip-yr{color:var(--g2)}
+body.dark .exp-chip-loc{color:var(--b2)}
+
+.exp-items-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;
+}
+
+.exp-item{
+  display:flex;align-items:flex-start;gap:0.75rem;
+  padding:1.25rem 1.75rem;
+  border-bottom:1px solid var(--border);
+  border-right:1px solid var(--border);
+  font-size:0.88rem;color:var(--muted);
+  line-height:1.65;font-weight:400;
+  transition:background 0.18s;
+}
+.exp-item:hover{background:var(--bg2)}
+.exp-item:nth-child(even){border-right:none}
+.exp-item:nth-last-child(-n+2){border-bottom:none}
+
+.exp-num{
+  font-family:'Outfit',sans-serif;
+  font-size:0.75rem;font-weight:800;
+  background:linear-gradient(135deg,var(--p1),var(--pk1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  flex-shrink:0;margin-top:0.1rem;
+}
+
+/* CONTACT */
+.contact-wrap{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:start;
+}
+
+.contact-left h3{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;
+  letter-spacing:-0.02em;line-height:1.2;margin-bottom:1rem;
+}
+
+.contact-sub{font-size:0.95rem;color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:2rem}
+
+.contact-right{display:flex;flex-direction:column;gap:0.75rem}
+
+.clink{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.25rem;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:0.875rem;text-decoration:none;color:inherit;
+  transition:transform 0.18s,border-color 0.18s,box-shadow 0.18s;
+}
+.clink:hover{transform:translateX(4px)}
+.clink:nth-child(1):hover{border-color:var(--pk1);box-shadow:0 4px 20px rgba(236,72,153,0.12)}
+.clink:nth-child(2):hover{border-color:var(--b1);box-shadow:0 4px 20px rgba(59,130,246,0.12)}
+.clink:nth-child(3):hover{border-color:var(--p1);box-shadow:0 4px 20px rgba(124,58,237,0.12)}
+.clink:nth-child(4):hover{border-color:var(--g1);box-shadow:0 4px 20px rgba(16,185,129,0.12)}
+
+.clink-icon{
+  width:40px;height:40px;border-radius:0.6rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;flex-shrink:0;
+}
+.clink:nth-child(1) .clink-icon{background:rgba(236,72,153,0.1)}
+.clink:nth-child(2) .clink-icon{background:rgba(59,130,246,0.1)}
+.clink:nth-child(3) .clink-icon{background:rgba(124,58,237,0.1)}
+.clink:nth-child(4) .clink-icon{background:rgba(16,185,129,0.1)}
+
+.clink-info label{display:block;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.clink-info span{font-size:0.88rem;color:var(--text);font-weight:500}
+.clink-arrow{margin-left:auto;color:var(--subtle);font-size:0.9rem;transition:transform 0.18s}
+.clink:hover .clink-arrow{transform:translate(3px,-3px)}
+
+/* FOOTER */
+footer{
+  padding:2rem 2.5rem;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-logo{
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:0.95rem;
+  background:linear-gradient(135deg,var(--p1),var(--pk1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.footer-copy{font-size:0.75rem;color:var(--subtle);letter-spacing:0.04em}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-inner>*{animation:fadeUp 0.6s ease both}
+.hero-badge{animation-delay:0.05s}
+.hero h1{animation-delay:0.12s}
+.hero-sub{animation-delay:0.2s}
+.hero-ctas{animation-delay:0.27s}
+.hero-stats{animation-delay:0.34s}
+
+@media(max-width:900px){
+  nav{padding:0.9rem 1.25rem}
+  .nav-links{display:none}
+  .hero{padding:7rem 1.25rem 4rem}
+  section{padding:4rem 1.25rem}
+  .about-grid,.contact-wrap{grid-template-columns:1fr}
+  .skills-bento{grid-template-columns:1fr 1fr}
+  .projects-bento{grid-template-columns:1fr}
+  .proj-card.featured{grid-column:span 1}
+  .exp-items-grid{grid-template-columns:1fr}
+  .exp-item:nth-child(even){border-right:none}
+  .exp-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
+  .exp-item:last-child{border-bottom:none}
+  footer{flex-direction:column;gap:0.5rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Mayank Rawat</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="theme-pill">
+    <button class="t-btn on" id="btn-light" onclick="setTheme('light')">☀️ Light</button>
+    <button class="t-btn" id="btn-dark" onclick="setTheme('dark')">🌙 Dark</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      <span class="badge-text">Available for new projects</span>
+    </div>
+    <h1>WordPress<br><span class="grad-text">Developer</span><br>&amp; Marketer.</h1>
+    <p class="hero-sub">Building fast, beautiful websites that rank and convert — WooCommerce stores, corporate sites, SEO &amp; social media. Based in Delhi, India.</p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-grad">View My Work</a>
+      <a href="#contact" class="btn-outline2">Get in Touch →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-num">7+</div>
+        <div class="hstat-label">Live Websites</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">2.5</div>
+        <div class="hstat-label">Years Exp</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">∞</div>
+        <div class="hstat-label">Ideas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><div class="marquee-dot"></div>WordPress</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Elementor Pro</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>WooCommerce</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>On-page SEO</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>RankMath</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Google Analytics</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Canva Design</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Social Media</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Yoast SEO</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>cPanel</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>WordPress</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Elementor Pro</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>WooCommerce</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>On-page SEO</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>RankMath</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Google Analytics</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Canva Design</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Social Media</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Yoast SEO</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>cPanel</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-eyebrow"><span>Who I am</span></div>
+  <h2 class="sec-title">About Me</h2>
+  <div class="about-grid">
+    <div class="about-copy">
+      <p>I'm a <strong>results-driven WordPress Developer and Digital Marketing Executive</strong> with 2.5+ years of hands-on experience building and managing professional websites for real clients across diverse industries.</p>
+      <p>From crafting e-commerce stores with WooCommerce to optimising content for Google rankings, I handle the <strong>full digital stack</strong> — design, development, SEO, and social media — with equal confidence.</p>
+      <p>I've delivered <strong>7+ live client websites</strong> in beauty, legal, education, and professional services — always on time, always client-first.</p>
+    </div>
+    <div class="about-cards">
+      <div class="acard">
+        <div class="acard-icon">📍</div>
+        <div class="acard-info"><label>Location</label><span>Delhi, India</span></div>
+      </div>
+      <div class="acard">
+        <div class="acard-icon">🎓</div>
+        <div class="acard-info"><label>Education</label><span>B.Com — University of Delhi, 2022</span></div>
+      </div>
+      <div class="acard">
+        <div class="acard-icon">🌐</div>
+        <div class="acard-info"><label>Languages</label><span>Hindi (Native) · English (Professional)</span></div>
+      </div>
+      <div class="acard">
+        <div class="acard-icon">⚡</div>
+        <div class="acard-info"><label>Status</label><span>Open to new opportunities</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" style="background:var(--bg2)">
+  <div class="sec-eyebrow"><span>What I do</span></div>
+  <h2 class="sec-title">Core Skills</h2>
+  <div class="skills-bento">
+    <div class="skill-bento-card sbc-p">
+      <span class="sbc-emoji">🛠️</span>
+      <div class="sbc-name">Web Development</div>
+      <div class="sbc-tags">
+        <span class="stag">WordPress</span><span class="stag">Elementor Pro</span>
+        <span class="stag">WooCommerce</span><span class="stag">HTML</span><span class="stag">CSS</span>
+        <span class="stag">JavaScript</span><span class="stag">PHP</span>
+      </div>
+    </div>
+    <div class="skill-bento-card sbc-g">
+      <span class="sbc-emoji">📈</span>
+      <div class="sbc-name">SEO &amp; Marketing</div>
+      <div class="sbc-tags">
+        <span class="stag">On-page SEO</span><span class="stag">RankMath</span>
+        <span class="stag">Yoast SEO</span><span class="stag">Keyword Research</span>
+      </div>
+    </div>
+    <div class="skill-bento-card sbc-b">
+      <span class="sbc-emoji">📱</span>
+      <div class="sbc-name">Social Media</div>
+      <div class="sbc-tags">
+        <span class="stag">Instagram</span><span class="stag">Facebook</span>
+        <span class="stag">LinkedIn</span><span class="stag">Scheduling</span>
+      </div>
+    </div>
+    <div class="skill-bento-card sbc-pk">
+      <span class="sbc-emoji">🎨</span>
+      <div class="sbc-name">Design &amp; Content</div>
+      <div class="sbc-tags">
+        <span class="stag">Canva</span><span class="stag">Graphic Design</span>
+        <span class="stag">Copywriting</span><span class="stag">Banners</span>
+      </div>
+    </div>
+    <div class="skill-bento-card sbc-o">
+      <span class="sbc-emoji">🔧</span>
+      <div class="sbc-name">Tools &amp; Analytics</div>
+      <div class="sbc-tags">
+        <span class="stag">Google Analytics</span><span class="stag">Search Console</span>
+        <span class="stag">cPanel</span><span class="stag">WP Dashboard</span>
+      </div>
+    </div>
+    <div class="skill-bento-card sbc-t">
+      <span class="sbc-emoji">🤝</span>
+      <div class="sbc-name">Soft Skills</div>
+      <div class="sbc-tags">
+        <span class="stag">Client Communication</span>
+        <span class="stag">Project Management</span><span class="stag">Attention to Detail</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-eyebrow"><span>Live Work</span></div>
+  <h2 class="sec-title">Portfolio</h2>
+  <div class="projects-bento">
+    <a href="https://sepcune.com" target="_blank" class="proj-card pc-p featured">
+      <div class="proj-sector">Company Website</div>
+      <div class="proj-name">Sepcune Technologies</div>
+      <div class="proj-desc">Corporate website for a digital technologies firm — showcasing services, building brand presence, and driving business enquiries.</div>
+      <div class="proj-url">sepcune.com</div>
+    </a>
+    <a href="https://lalwani.store" target="_blank" class="proj-card pc-g">
+      <div class="proj-sector">E-Commerce · WooCommerce</div>
+      <div class="proj-name">Lalwani Store</div>
+      <div class="proj-desc">Full WooCommerce store with product listings, payment gateway, and order management.</div>
+      <div class="proj-url">lalwani.store</div>
+    </a>
+    <a href="https://trustto.in" target="_blank" class="proj-card pc-b">
+      <div class="proj-sector">Professional Services</div>
+      <div class="proj-name">TrustTo</div>
+      <div class="proj-desc">Services website built for credibility and lead generation.</div>
+      <div class="proj-url">trustto.in</div>
+    </a>
+    <a href="https://kamaxbeauty.com" target="_blank" class="proj-card pc-pk">
+      <div class="proj-sector">Beauty &amp; Lifestyle</div>
+      <div class="proj-name">Kamax Beauty</div>
+      <div class="proj-desc">Elegant beauty brand website with visual identity and social media integration.</div>
+      <div class="proj-url">kamaxbeauty.com</div>
+    </a>
+    <a href="https://avaassociates.in" target="_blank" class="proj-card pc-o">
+      <div class="proj-sector">Legal / Professional</div>
+      <div class="proj-name">Ava Associates</div>
+      <div class="proj-desc">Professional firm website built to establish trust and drive enquiries.</div>
+      <div class="proj-url">avaassociates.in</div>
+    </a>
+    <a href="https://smartsprouts.in" target="_blank" class="proj-card pc-t">
+      <div class="proj-sector">Education</div>
+      <div class="proj-name">Smart Sprouts</div>
+      <div class="proj-desc">Education website with strong SEO and intuitive navigation.</div>
+      <div class="proj-url">smartsprouts.in</div>
+    </a>
+    <a href="https://3003c.in" target="_blank" class="proj-card pc-y">
+      <div class="proj-sector">Business</div>
+      <div class="proj-name">3003C</div>
+      <div class="proj-desc">Business website designed to represent the brand online effectively.</div>
+      <div class="proj-url">3003c.in</div>
+    </a>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" style="background:var(--bg2)">
+  <div class="sec-eyebrow"><span>Where I've worked</span></div>
+  <h2 class="sec-title">Experience</h2>
+  <div class="exp-wrap">
+    <div class="exp-top">
+      <div class="exp-role-title">WordPress Developer &amp; Digital Content Manager</div>
+      <div class="exp-meta-row">
+        <span class="exp-chip exp-chip-co">Sepcune Technologies</span>
+        <span class="exp-chip exp-chip-yr">2024 – Present · 2.5+ Years</span>
+        <span class="exp-chip exp-chip-loc">Delhi, India</span>
+      </div>
+    </div>
+    <div class="exp-items-grid">
+      <div class="exp-item"><span class="exp-num">01</span><span>Designed, developed, and launched 7+ client websites using WordPress and Elementor Pro</span></div>
+      <div class="exp-item"><span class="exp-num">02</span><span>Built WooCommerce stores with product listings, payment gateways, and order management</span></div>
+      <div class="exp-item"><span class="exp-num">03</span><span>Performed on-page SEO using RankMath and Yoast SEO to improve search rankings</span></div>
+      <div class="exp-item"><span class="exp-num">04</span><span>Managed social media accounts on Instagram, Facebook, and LinkedIn for multiple clients</span></div>
+      <div class="exp-item"><span class="exp-num">05</span><span>Created visual content — graphics, banners, post designs — using Canva</span></div>
+      <div class="exp-item"><span class="exp-num">06</span><span>Handled website maintenance, speed optimisation, plugin updates, and security monitoring</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-eyebrow"><span>Let's work together</span></div>
+  <h2 class="sec-title">Get in Touch</h2>
+  <div class="contact-wrap">
+    <div class="contact-left">
+      <h3>Have a project<br><span class="grad-text">in mind?</span></h3>
+      <p class="contact-sub">Open to freelance projects, full-time roles, and new collaborations. Whether it's a new website, SEO work, or social media — let's talk.</p>
+      <a href="mailto:rawatmayank691@gmail.com" class="btn-grad">Send a Message</a>
+    </div>
+    <div class="contact-right">
+      <a href="mailto:rawatmayank691@gmail.com" class="clink">
+        <div class="clink-icon">✉️</div>
+        <div class="clink-info"><label>Email</label><span>rawatmayank691@gmail.com</span></div>
+        <span class="clink-arrow">↗</span>
+      </a>
+      <a href="tel:+917291836415" class="clink">
+        <div class="clink-icon">📞</div>
+        <div class="clink-info"><label>Phone</label><span>+91 72918 36415</span></div>
+        <span class="clink-arrow">↗</span>
+      </a>
+      <a href="https://linkedin.com/in/mayank-rawat-691m" target="_blank" class="clink">
+        <div class="clink-icon">🔗</div>
+        <div class="clink-info"><label>LinkedIn</label><span>linkedin.com/in/mayank-rawat-691m</span></div>
+        <span class="clink-arrow">↗</span>
+      </a>
+      <div class="clink" style="cursor:default">
+        <div class="clink-icon">📍</div>
+        <div class="clink-info"><label>Location</label><span>Delhi, India</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">Mayank Rawat</span>
+  <span class="footer-copy">© 2025 · WordPress Developer · Delhi, India</span>
+</footer>
+
+<script>
+function setTheme(t){
+  document.body.classList.toggle('dark',t==='dark');
+  document.getElementById('btn-light').classList.toggle('on',t==='light');
+  document.getElementById('btn-dark').classList.toggle('on',t==='dark');
+  localStorage.setItem('mr-theme',t);
+}
+(function(){
+  if(localStorage.getItem('mr-theme')==='dark')setTheme('dark');
+})();
+</script>
+</body>
+</html>
