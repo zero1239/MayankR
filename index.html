@@ -571,7 +571,7 @@ footer{
 }
 </style>
 </head>
-<body>
+<body class="dark">
 
 <nav>
   <a href="#" class="nav-logo">Mayank Rawat</a>
@@ -583,8 +583,8 @@ footer{
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="theme-pill">
-    <button class="t-btn on" id="btn-light" onclick="setTheme('light')">☀️ Light</button>
-    <button class="t-btn" id="btn-dark" onclick="setTheme('dark')">🌙 Dark</button>
+    <button class="t-btn" id="btn-light" onclick="setTheme('light')">☀️ Light</button>
+    <button class="t-btn on" id="btn-dark" onclick="setTheme('dark')">🌙 Dark</button>
   </div>
 </nav>
 
@@ -856,7 +856,8 @@ function setTheme(t){
   localStorage.setItem('mr-theme',t);
 }
 (function(){
-  if(localStorage.getItem('mr-theme')==='dark')setTheme('dark');
+  const saved=localStorage.getItem('mr-theme');
+  setTheme(saved||'dark');
 })();
 </script>
 </body>
